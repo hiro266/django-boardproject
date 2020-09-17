@@ -1,0 +1,6 @@
+.ui-loader > .ui-progress-loading {
+  width: 0;
+  height: 1em;
+  background-color: #ccc;
+  margin: 0.3em;
+}

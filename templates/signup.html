@@ -2,12 +2,11 @@
 {% load static %}
 
 {% block customcss %}
-<link rel='stylesheet' type='text/css' href="{% static 'style.css' %}">
+<link rel='stylesheet' type='text/css' href="{% static 'loginform/style.css' %}">
 {% endblock customcss %}
 
 {% block content %}
 <form class="form-signin" method="POST" action=''>{% csrf_token %}
-  <img class="mb-4" src="/docs/4.5/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
   <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
   <!-- errorという変数(views.pyで定義)がある場合、中身を実行 -->
   {% if error %}
