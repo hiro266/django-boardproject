@@ -1,16 +1,79 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block customcss %}
+<link rel='stylesheet' type='text/css' href="{% static 'progressbar/style.css' %}">
+{% endblock customcss %}
 
 {% block content %}
 {% if user.is_authenticated %}
-<form action='' method='POST' enctype="multipart/form-data">{% csrf_token %}
+<form action="javascript:void(0);" method='POST' enctype="multipart/form-data">{% csrf_token %}
   <p>タイトル：<input type='text' name='title'></p>
   <p>内容：<input type='text' name='content'></p>
   <p>画像：<input type='file' name='images'></p>
+  <p>動画：<input id='movie' type='file' name='movie'></p>
   <input type='hidden' name='author' value='{{ user.username }}'>
 
-  <input type='submit' value='作成する'>
+  <input id='create' type='submit' value='作成する'>
 </form>
+
+<div class="ui-loader">
+  <div class="ui-progress-loading"></div>
+</div>
+
 {% else %}
 ログインしてください
 {% endif %}
 {% endblock content %}
+
+{% block page_scripts %}
+<script>
+  $(function() {
+    $(document).on("click", "#create", function() {
+      const form = $('form')[0];
+      const formdata = new FormData(form);
+
+      $.ajax({
+          url  : location.pathname,
+          type : "POST",
+          data : formdata,
+          cache       : false,
+          contentType : false,
+          processData : false,
+          dataType    : "html",
+          xhr: ajaxLoaderProgress,
+          success     : function() {
+            location.href = '/list/'
+          },
+      })
+      .done(function(data, textStatus, jqXHR){
+          alert(jqXHR);
+      })
+      .fail(function(jqXHR, textStatus, errorThrown){
+          alert("fail");
+      });
+    });
+
+    function ajaxLoaderProgress() {
+        let x = $.ajaxSettings.xhr();
+        if (x.upload) {
+            x.upload.addEventListener("progress", loaderProgress, false);
+        }
+        return x;
+    }
+
+    function loaderProgress(e) {
+        let loader = $(".ui-loader");
+
+        let progress = loader.children(".ui-progress-loading");
+        if (progress.length <= 0) {
+            progress = $("<div class='ui-progress-loading'></div>");
+            loader.append(progress);
+        }
+
+        let v = Math.floor((e.loaded / e.total * 10000) / 100);
+        progress.width(v + "%");
+    }
+  });
+</script>
+{% endblock page_scripts %}

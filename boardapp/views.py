@@ -76,6 +76,6 @@ class BoardCreate(CreateView):
     template_name = 'create.html'
     model = BoardModel
     # 引っ張ってくるフィールドを指定
-    fields = ('title', 'content', 'author', 'images')
+    fields = ('title', 'content', 'author', 'images', 'movie')
     # createでデータの作成が完了したときに遷移する画面
     success_url = reverse_lazy('list')
